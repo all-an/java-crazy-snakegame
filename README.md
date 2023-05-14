@@ -1,4 +1,4 @@
-```markdown
+
 # Crazy Snake Game
 
 [![Java](https://img.shields.io/badge/Java-%3E%3D8-blue.svg)](https://www.java.com/)
@@ -18,6 +18,7 @@ Crazy Snake Game is a fun and addictive game where the player controls a snake a
 ## Installation
 1. Make sure you have Java JDK 8 or higher installed.
 2. Clone this repository to your local machine.
+
    ```shell
    git clone https://github.com/your-username/crazy-snake-game.git
    ```
@@ -55,4 +56,4 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 - [Java](https://www.java.com/) - The programming language used for the game.
 - [JFrame](https://docs.oracle.com/javase/8/docs/api/javax/swing/JFrame.html) - Java Swing library for creating the game window.
 - [KeyAdapter](https://docs.oracle.com/javase/8/docs/api/java/awt/event/KeyAdapter.html) - Java AWT event listener for keyboard input.
-```
+
