@@ -4,9 +4,11 @@ import javax.swing.JFrame;
 
 public class GameFrame extends JFrame{
 	
+	GamePanel gamePanel;
+	
 	GameFrame(){
-		this.add(new GamePanel());
-		this.setTitle("Crazy Snake");
+		gamePanel = new GamePanel();
+		this.add(gamePanel);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(true);
 		this.pack();

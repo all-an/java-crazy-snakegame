@@ -57,3 +57,5 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 - [JFrame](https://docs.oracle.com/javase/8/docs/api/javax/swing/JFrame.html) - Java Swing library for creating the game window.
 - [KeyAdapter](https://docs.oracle.com/javase/8/docs/api/java/awt/event/KeyAdapter.html) - Java AWT event listener for keyboard input.
 
+### Special thanks to BroCode:
+https://youtu.be/bI6e6qjJ8JQ

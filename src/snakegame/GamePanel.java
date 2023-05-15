@@ -1,9 +1,19 @@
 package snakegame;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Random;
+
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener{
 	
@@ -20,10 +30,10 @@ public class GamePanel extends JPanel implements ActionListener{
 	final int x[] = new int[GAME_UNITS];
 	final int y[] = new int[GAME_UNITS];
 	int bodyParts = 6;
-	int applesEaten;
+	int foodsEaten;
 	int foodX;
 	int foodY;
-	char direction = 'R'; // R = right
+	String direction = "RIGHT"; // R = right
 	boolean running = false;
 	Timer timer;
 	Random random;
@@ -56,14 +66,28 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	public void draw(Graphics g) {
-		
-		for(int i = 0; i < ((SCREEN_WIDTH / UNIT_SIZE) + (UNIT_SIZE * 2)); i++) {
-			g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, BELOW_LIMIT);
-			g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-			//g.drawLine(0, i * UNIT_SIZE, SCREEN_HEIGHT, 0); // incredible thing 
+		if(running) {			
+			for(int i = 0; i < ((SCREEN_WIDTH / UNIT_SIZE) + (UNIT_SIZE * 2)); i++) {
+				g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, BELOW_LIMIT);
+				g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+				//g.drawLine(0, i * UNIT_SIZE, SCREEN_HEIGHT, 0); // incredible thing 
+			}
+			g.setColor(Color.yellow);
+			g.fillRect(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
+			
+			for(int i = 0; i < bodyParts; i++) {
+				if(i == 0) {
+					g.setColor(Color.green);
+					g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+				} else {
+					g.setColor(new Color(45, 180, 0));
+					g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+					g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+				}
+			}
+		} else {
+			gameOver(g);
 		}
-		g.setColor(Color.yellow);
-		g.fillRect(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
 	}
 	
 	public void newFood() {
@@ -77,30 +101,107 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	public void move() {
+		for(int i = bodyParts; i > 0; i--) {
+			x[i] = x[i-1];
+			y[i] = y[i-1];
+		}
 		
+		switch(direction) {
+		case "UP":
+			y[0] = y[0] - UNIT_SIZE;
+			break;
+		case "DOWN":
+			y[0] = y[0] + UNIT_SIZE;
+			break;
+		case "LEFT":
+			x[0] = x[0] - UNIT_SIZE;
+			break;
+		case "RIGHT":
+			x[0] = x[0] + UNIT_SIZE;
+			break;
+		}
 	}
 	
-	public void checkApple() {
-		
+	public void checkFood() {
+		if((x[0] == foodX) && (y[0] == foodY)) {
+			bodyParts++;
+			foodsEaten++;
+			newFood();
+		}
 	}
 	
 	public void checkCollisions() {
+		//check if head collides with body
+		for(int i = bodyParts; i > 0; i--) {
+			if((x[0] == x[i]) && (y[0] == y[i])) {
+				running = false;
+			}
+		}
+		//check if head touches left or right border
+		if(x[0] < 0 || x[0] > SCREEN_WIDTH) {
+			running = false;
+		}
+		//check if head touches top or down border
+		if(y[0] < 0 || y[0] > (BELOW_LIMIT - UNIT_SIZE)) {
+			running = false;
+		}
 		
+		if(!running) {
+			timer.stop();
+		}
 	}
 	
 	public void gameOver(Graphics g) {
+		// Game over text
+		g.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+		g.setFont(new Font("Arial", Font.BOLD, 50));
+		FontMetrics metrics = getFontMetrics(g.getFont());
+		g.drawString("Game Over",
+					(SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2,
+					DELAY);
 		
+		g.drawString("Score: " + foodsEaten,
+					(SCREEN_WIDTH - metrics.stringWidth("Score: " + foodsEaten))/2,
+					((SCREEN_HEIGHT - metrics.stringWidth("Score: " + foodsEaten))/2));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) { 	
-		// TODO Auto-generated method stub
+		if(running) {
+			move();
+			checkFood();
+			checkCollisions();
+		}
+		repaint();
 		
 	}
 	
 	public class MyKeyAdapter extends KeyAdapter {
 		
-		public void KeyPressed(KeyEvent e) {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			switch(e.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+				if(direction != "RIGHT") {
+					direction = "LEFT";
+				}
+				break;
+			case KeyEvent.VK_RIGHT:
+				if(direction != "LEFT") {
+					direction = "RIGHT";
+				}
+				break;
+			case KeyEvent.VK_UP:
+				if(direction != "DOWN") {
+					direction = "UP";
+				}
+				break;
+			case KeyEvent.VK_DOWN:
+				if(direction != "UP") {
+					direction = "DOWN";
+				}
+				break;
+			}
 			
 		}
 	}
