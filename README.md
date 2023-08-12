@@ -1,6 +1,10 @@
 
 # Crazy Snake Game
 
+
+https://github.com/all-an/java-crazy-snakegame/assets/68200962/e89b4e6b-2350-4073-9d12-310aa849aa97
+
+
 [![Java](https://img.shields.io/badge/Java-%3E%3D8-blue.svg)](https://www.java.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
